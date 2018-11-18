@@ -41,7 +41,7 @@ FROM winners, party, country
 WHERE winners.party_id = party.id AND party.country_id = country.id;
 
 -- Get the sum of total number of parties in a country
-CREATE VIEW total_parties
+CREATE VIEW total_parties AS
 SELECT country.name country_name, count(party.id) total
 FROM party, country
 WHERE party.country_id = country.id
