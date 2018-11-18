@@ -24,7 +24,7 @@ DROP VIEW IF EXISTS intermediate_step CASCADE;
 -- Find the winning votes for the elections
 CREATE VIEW winning_votes AS
 SELECT election_id, max(votes) maxVotes
-FROM election_results
+FROM election_result
 GROUP BY election_id;
 
 -- Find all election winners and number of times they have won
