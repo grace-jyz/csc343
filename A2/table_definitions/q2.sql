@@ -69,8 +69,7 @@ WHERE er.votes = wv.maxVotes;
 -- Get most recent win dates
 CREATE VIEW recent_win_dates AS
 SELECT party_id, max(e_date) e_date
-FROM winners_and_elec, election
-WHERE winners_and_elec.election_id = election.id
+FROM winners_and_elec
 GROUP BY party_id;
 
 -- Get all the info on the most recent win
