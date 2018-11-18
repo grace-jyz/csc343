@@ -3,9 +3,6 @@
 SET SEARCH_PATH TO parlgov;
 drop table if exists q4 cascade;
 
--- You must not change this table definition.
-
-
 CREATE TABLE q4(
         countryName VARCHAR(50),
         r0_2 INT,
@@ -15,11 +12,14 @@ CREATE TABLE q4(
         r8_10 INT
 );
 
--- You may find it convenient to do this for each of the views
--- that define your intermediate steps.  (But give them better names!)
-DROP VIEW IF EXISTS intermediate_step CASCADE;
+-- Drop views for intermediate steps.
+DROP VIEW IF EXISTS pos_and_country CASCADE;
+DROP VIEW IF EXISTS range1 CASCADE;
+DROP VIEW IF EXISTS range2 CASCADE;
+DROP VIEW IF EXISTS range4 CASCADE;
+DROP VIEW IF EXISTS range5 CASCADE;
 
--- Define views for your intermediate steps here.
+-- Views for intermediate steps.
 CREATE VIEW pos_and_country AS
 SELECT party_position.party_id, party_position.left_right, country.name countryName
 FROM party_position, party, country
@@ -60,8 +60,7 @@ FROM pos_and_country
 WHERE left_right >= 8 AND left_right <= 10
 GROUP BY countryName;
 
--- the answer to the query 
+-- The answer to the query.
 INSERT INTO q4 
 SELECT countryName, r0_2, r2_4, r4_6, r6_8, r8_10
 FROM range1 NATURAL JOIN range2 NATURAL JOIN range3 NATURAL JOIN range4 NATURAL JOIN range5;
-
