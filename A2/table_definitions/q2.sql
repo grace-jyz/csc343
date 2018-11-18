@@ -61,9 +61,10 @@ WHERE elec_won > (average * 3);
 
 -- Find all election winners with election id and date
 CREATE VIEW winners_and_elec AS
-SELECT election_id, party_id, e_date
-FROM election_result JOIN election JOIN winning_votes
-WHERE election_result.election_id = election.id AND election_result.election_id = winning_vote.election_id AND election_result.votes = winning_votes.maxVotes;
+SELECT er.election_id, er.party_id, e.e_date
+FROM election_result er JOIN election e ON er.election_id = e.id 
+JOIN winning_votes wv ON er.election_id = wv.election_id
+WHERE er.votes = wv.maxVotes;
 
 -- Get most recent win dates
 CREATE VIEW recent_win_dates AS
