@@ -80,7 +80,7 @@ FROM winners_and_elec NATURAL JOIN recent_win_dates;
 
 CREATE VIEW valid_winner_info AS
 SELECT country_name countryName, party_name partyName, party_family.family partyFamily, elec_won wonElections, election_id mostRecentlyWonElectionId, EXTRACT(year FROM e_date) mostRecentlyWonElectionYear
-FROM win_more3 NATURAL JOIN party_family NATURAL JOIN recent_win_info;
+FROM win_more3 NATURAL LEFT JOIN party_family NATURAL JOIN recent_win_info;
 
 -- the answer to the query 
 
