@@ -42,7 +42,7 @@ WHERE winners.party_id = party.id AND party.country_id = country.id;
 
 -- Get the sum of total number of parties in a country
 CREATE VIEW total_parties
-SELECT country.name country_name, count(distinct party.id) total
+SELECT country.name country_name, count(party.id) total
 FROM party, country
 WHERE party.country_id = country.id
 GROUP BY country_id;
@@ -50,7 +50,7 @@ GROUP BY country_id;
 -- Get average winning times for each country
 CREATE VIEW winning_avg AS
 SELECT country_name, (sum(elec_won)/ total) average
-FROM winners_by_country JOIN total_parties USING country_name
+FROM winners_by_country NATURAL JOIN total_parties
 GROUP BY country_name, total;
 
 -- Find parties that has won >3*avg
