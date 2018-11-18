@@ -45,7 +45,7 @@ CREATE VIEW total_parties
 SELECT country.name country_name, count(party.id) total
 FROM party, country
 WHERE party.country_id = country.id
-GROUP BY country_id;
+GROUP BY country.name;
 
 -- Get average winning times for each country
 CREATE VIEW winning_avg AS
