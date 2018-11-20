@@ -44,7 +44,7 @@ public class Assignment2 extends JDBCSubmission {
             else return null;  // countryName not found
 
             PreparedStatement electionStat = connection.prepareStatement(
-                "SELECT id FROM election WHERE e.country_id=? ORDER BY e_date DESC");
+                "SELECT id FROM election WHERE country_id=? ORDER BY e_date DESC");
             electionStat.setInt(1, countryID);
             ResultSet electionSet = electionStat.executeQuery();
 
@@ -53,8 +53,26 @@ public class Assignment2 extends JDBCSubmission {
                 elections.add(electionID);
 
                 // get type of election
-                // get previous election of same type
+                PreparedStatement typeStat = connection.prepareStatement(
+                    "SELECT e_type, previous_parliament_election_id, previous_ep_election_id FROM election WHERE id=?")
+                typeStat.setInt(1, electionID);
+                ResultSet typeSet = typeSet.executeQuery();
+
+                typeSet.next();
+                String electionType = typeSet.getString("e_type");
+                // get next election of same type
+                String nextElectionID;
+                if (electionType.equals("European Parliament"))
+                    nextElectionID = typeSet.getString("previous_ep_election_id")
+                else
+                    nextElectionID = typeSet.getString("previous_parliament_election_id");
+                
                 // get date of previous election
+                if (nextElectionID is null) {
+
+                } else {
+                    
+                }
                 // find cabinets between that date and the current electionid date
                 // add cabinets to cabinets list
             }
