@@ -80,9 +80,40 @@ public class Assignment2 extends JDBCSubmission {
     }
 
     @Override
-    public List<Integer> findSimilarPoliticians(Integer politicianName, Float threshold) {
-        // Implement this method!
-        return null;
+    public List<Integer> findSimilarPoliticians(Integer politicianId, Float threshold) {
+        List<Integer> similarPoliticians = new ArrayList<>();
+
+        try {
+            PreparedStatement politicianStat = connection.prepareStatement(
+                "SELECT description, comment FROM politician_president WHERE id=?");
+            politicianStat.setInt(1, politicianId);
+            ResultSet politicianSet = politicianStat.executeQuery();
+
+            // First find the data of the politician to compare with
+            String politicianDesc, politicianComment;
+            if (politicianSet.next()) {
+                politicianDesc = politicianSet.getString("description");
+                politicianComment = politicianSet.getString("comment");
+            } else return null;  // politicianId was not found
+
+            // A politician is not similar to themself
+            PreparedStatement similarStat = connection.prepareStatement(
+                "SELECT id, description, comment FROM politician_president WHERE id<>?");
+            similarStat.setInt(1, politicianId);
+            ResultSet similarSet = similarStat.executeQuery();
+
+            while (similarSet.next()) {
+                String desc = similarSet.getString("description");
+                String comment = similarSet.getString("comment");
+
+                // Find similar politicians with inputted politician
+                if (similarity(desc + comment, politicianDesc + politicianComment) >= threshold)
+                    similarPoliticians.add(similarSet.getInt("id"));
+            }
+
+        } catch (SQLException se) { return null; }
+
+        return similarPoliticians;
     }
 
     public static void main(String[] args) {
@@ -90,12 +121,10 @@ public class Assignment2 extends JDBCSubmission {
             Assignment2 test = new Assignment2();
 
             test.connectDB("jdbc:postgresql://localhost:5432/csc343h-choihy38?currentSchema=parlgov", "choihy38", "");
-            System.out.println(test.electionSequence("Japan").toString());
+            // System.out.println(test.electionSequence("Japan").toString());
+            // System.out.println(test.findSimilarPoliticians(37, .1f).toString());
             test.disconnectDB();
-        } catch (ClassNotFoundException e) {
-            System.out.println(e);
-            return;
-        }
+        } catch (ClassNotFoundException e) { return; }
     }
 
 }
