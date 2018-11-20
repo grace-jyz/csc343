@@ -94,7 +94,7 @@ public class Assignment2 extends JDBCSubmission {
             if (politicianSet.next()) {
                 politicianDesc = politicianSet.getString("description");
                 politicianComment = politicianSet.getString("comment");
-            } else return null;  // politicianId was not found
+            } else return [];  // politicianId was not found
 
             // A politician is not similar to themself
             PreparedStatement similarStat = connection.prepareStatement(
@@ -111,7 +111,7 @@ public class Assignment2 extends JDBCSubmission {
                     similarPoliticians.add(similarSet.getInt("id"));
             }
 
-        } catch (SQLException se) { return null; }
+        } catch (SQLException se) { return []; }
 
         return similarPoliticians;
     }
