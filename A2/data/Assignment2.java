@@ -11,13 +11,12 @@ import java.util.ArrayList;
 //import java.util.HashSet;
 public class Assignment2 extends JDBCSubmission {
     public Assignment2() throws ClassNotFoundException {
-
         Class.forName("org.postgresql.Driver");
     }
 
     @Override
     public boolean connectDB(String url, String username, String password) {
-        try { this.connection = DriverManager.getConnection(url + "?currentSchema=parlgov", username, password);
+        try { this.connection = DriverManager.getConnection(url, username, password);
         } catch (SQLException se) { return false; }
         return true;
     }
@@ -44,39 +43,53 @@ public class Assignment2 extends JDBCSubmission {
             else return null;  // countryName not found
 
             PreparedStatement electionStat = connection.prepareStatement(
-                "SELECT id FROM election WHERE country_id=? ORDER BY e_date DESC");
+                "SELECT id FROM election WHERE country_id=? ORDER BY e_date");
             electionStat.setInt(1, countryID);
             ResultSet electionSet = electionStat.executeQuery();
 
             while (electionSet.next()) {
                 int electionID = electionSet.getInt("id");
-                elections.add(electionID);
+                elections.add(0, electionID);
 
-                // get type of election
-                PreparedStatement typeStat = connection.prepareStatement(
-                    "SELECT e_type, previous_parliament_election_id, previous_ep_election_id FROM election WHERE id=?")
+                // Get type and date of election
+                PreparedStatement typeStat = connection.prepareStatement("SELECT e_type, e_date FROM election WHERE id=?");
                 typeStat.setInt(1, electionID);
-                ResultSet typeSet = typeSet.executeQuery();
+                ResultSet typeSet = typeStat.executeQuery();
 
                 typeSet.next();
                 String electionType = typeSet.getString("e_type");
-                // get next election of same type
-                String nextElectionID;
-                if (electionType.equals("European Parliament"))
-                    nextElectionID = typeSet.getString("previous_ep_election_id")
-                else
-                    nextElectionID = typeSet.getString("previous_parliament_election_id");
+                java.sql.Date electionDate = typeSet.getDate("e_date");
                 
-                // get date of previous election
-                if (nextElectionID is null) {
+                String nextType = electionType.equals("European Parliament") ? "previous_ep_election_id" : "previous_parliament_election_id";
+                PreparedStatement nextElectionStat = connection.prepareStatement(
+                    "SELECT e_date FROM election WHERE " + nextType + "=?");
+                nextElectionStat.setInt(1, electionID);
+                ResultSet nextElectionSet = nextElectionStat.executeQuery();
 
+                PreparedStatement cabinetStat;
+                if (nextElectionSet.next()) {
+                    java.sql.Date nextElectionDate = nextElectionSet.getDate("e_date");
+                    cabinetStat = connection.prepareStatement(
+                        "SELECT id FROM cabinet WHERE start_date >= ? AND start_date < ? AND election_id=?");
+                    cabinetStat.setDate(1, electionDate);
+                    cabinetStat.setDate(2, nextElectionDate);
+                    cabinetStat.setInt(3, electionID);
                 } else {
-                    
+                    cabinetStat = connection.prepareStatement(
+                        "SELECT id FROM cabinet WHERE start_date >= ? AND election_id=?");
+                    cabinetStat.setDate(1, electionDate);
+                    cabinetStat.setInt(2, electionID);
                 }
-                // find cabinets between that date and the current electionid date
+
                 // add cabinets to cabinets list
+                ResultSet cabinetSet = cabinetStat.executeQuery();
+                while (cabinetSet.next())
+                    cabinets.add(0, cabinetSet.getInt("id"));
             }
-        } catch (SQLException se) { return null; }
+        } catch (SQLException se) {
+            System.out.println(se);
+            return null;
+        }
 
         return new ElectionCabinetResult(elections, cabinets);
     }
@@ -92,9 +105,12 @@ public class Assignment2 extends JDBCSubmission {
             Assignment2 test = new Assignment2();
 
             test.connectDB("jdbc:postgresql://localhost:5432/csc343h-choihy38", "choihy38", "");
-            // System.out.println(test.electionSequence("Japan").toString());
+            System.out.println(test.electionSequence("Japan").toString());
             test.disconnectDB();
-        } catch (ClassNotFoundException e) { return; }
+        } catch (ClassNotFoundException e) {
+            System.out.println(e);
+            return;
+        }
     }
 
 }
