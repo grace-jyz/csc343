@@ -26,8 +26,8 @@ FROM election JOIN country ON election.country_id = country.id;
 CREATE VIEW avg_year AS
 SELECT countryName, AVG(year) as year, participationRatio
 FROM country_year
-WHERE 2001 <= year AND year <= 2016
-GROUP BY countryName;
+WHERE 2001 <= year AND year <= 2016 AND participationRatio IS NOT NULL
+GROUP BY countryName, year, participationRatio;
 
 CREATE VIEW correct_countries AS
 SELECT distinct countryName
