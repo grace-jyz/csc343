@@ -20,7 +20,7 @@ DROP VIEW IF EXISTS intermediate_step CASCADE;
 -- At least one election between 2001 ~ 2016 [2001,2016]
 CREATE VIEW country_year AS
 SELECT country.name as countryName, date_part('year', election.e_date) as year,
-votes_cast/electorate AS participationRatio
+CAST(votes_cast AS FLOAT) / CAST(electorate AS FLOAT) AS participationRatio
 FROM election JOIN country ON election.country_id = country.id;
 
 CREATE VIEW avg_year AS
