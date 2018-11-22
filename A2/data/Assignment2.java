@@ -44,8 +44,6 @@ public class Assignment2 extends JDBCSubmission {
                 String electionType = electionSet.getString("e_type");
                 java.sql.Date electionDate = electionSet.getDate("e_date");
 
-                elections.add(0, electionID);
-
                 // Find the date of the next election of the same type
                 String nextType = electionType.equals("European Parliament") ? "previous_ep_election_id" : "previous_parliament_election_id";
                 PreparedStatement nextElectionStat = connection.prepareStatement(
@@ -71,8 +69,10 @@ public class Assignment2 extends JDBCSubmission {
 
                 // Add cabinets to cabinets list
                 ResultSet cabinetSet = cabinetStat.executeQuery();
-                while (cabinetSet.next())
+                while (cabinetSet.next()) {
+                    elections.add(0, electionID);
                     cabinets.add(0, cabinetSet.getInt("id"));
+                }
             }
         } catch (SQLException se) { return null; }
 
@@ -94,7 +94,7 @@ public class Assignment2 extends JDBCSubmission {
             if (politicianSet.next()) {
                 politicianDesc = politicianSet.getString("description");
                 politicianComment = politicianSet.getString("comment");
-            } else return [];  // politicianId was not found
+            } else return new ArrayList<Integer>();  // politicianId was not found
 
             // A politician is not similar to themself
             PreparedStatement similarStat = connection.prepareStatement(
@@ -107,24 +107,24 @@ public class Assignment2 extends JDBCSubmission {
                 String comment = similarSet.getString("comment");
 
                 // Find similar politicians with inputted politician
-                if (similarity(desc + comment, politicianDesc + politicianComment) >= threshold)
+                if (similarity(desc + " " + comment, politicianDesc + " " + politicianComment) >= threshold)
                     similarPoliticians.add(similarSet.getInt("id"));
             }
 
-        } catch (SQLException se) { return []; }
+        } catch (SQLException se) { return new ArrayList<Integer>(); }
 
         return similarPoliticians;
     }
 
     public static void main(String[] args) {
-        try {
-            Assignment2 test = new Assignment2();
+        // try {
+        //     Assignment2 test = new Assignment2();
 
-            test.connectDB("jdbc:postgresql://localhost:5432/csc343h-choihy38?currentSchema=parlgov", "choihy38", "");
-            // System.out.println(test.electionSequence("Japan").toString());
-            // System.out.println(test.findSimilarPoliticians(37, .1f).toString());
-            test.disconnectDB();
-        } catch (ClassNotFoundException e) { return; }
+        //     test.connectDB("jdbc:postgresql://localhost:5432/csc343h-choihy38?currentSchema=parlgov", "choihy38", "");
+        //     System.out.println(test.electionSequence("Japan").toString());
+        //     System.out.println(test.findSimilarPoliticians(37, .1f).toString());
+        //     test.disconnectDB();
+        // } catch (ClassNotFoundException e) { return; }
     }
 
 }

@@ -27,9 +27,9 @@ WHERE year >= 1996 AND year <= 2016 AND vote_percentage IS NOT NULL
 GROUP BY year, country_id, party_id;
 
 CREATE VIEW answer AS
-SELECT year, country.name AS countryName, 
+SELECT year, country.name AS countryName,
     CASE
-        WHEN 0 < vote_percentage AND vote_percentage <= 5 THEN '(0-5]'
+        WHEN vote_percentage <= 5 THEN '(0-5]'
         WHEN 5 < vote_percentage AND vote_percentage <= 10 THEN '(5-10]'
         WHEN 10 < vote_percentage AND vote_percentage <= 20 THEN '(10-20]'
         WHEN 20 < vote_percentage AND vote_percentage <= 30 THEN '(20-30]'
