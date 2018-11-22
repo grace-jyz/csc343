@@ -25,7 +25,7 @@ SELECT party_position.party_id, party_position.left_right, party.country_id
 FROM party_position JOIN party ON party_position.party_id = party.id;
 
 CREATE VIEW pos_and_country AS
-SELECT party_pos.party_id, party_position.left_right, country.name countryName
+SELECT party_pos.party_id, party_pos.left_right, country.name countryName
 FROM country LEFT JOIN party_pos ON party_pos.country_id = country.id;
 
 -- Range [0,2)
