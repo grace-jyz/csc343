@@ -20,10 +20,13 @@ DROP VIEW IF EXISTS range4 CASCADE;
 DROP VIEW IF EXISTS range5 CASCADE;
 
 -- Views for intermediate steps.
+CREATE VIEW party_pos AS
+SELECT party_position.party_id, party_position.left_right, party.country_id
+FROM JOIN party_position JOIN party ON party_position.party_id = party.id;
+
 CREATE VIEW pos_and_country AS
-SELECT party_position.party_id, party_position.left_right, country.name countryName
-FROM party_position, party, country
-WHERE party_position.party_id = party.id AND party.country_id = country.id;
+SELECT party_pos.party_id, party_position.left_right, country.name countryName
+FROM JOIN country LEFT JOIN party_pos ON party_pos.country_id = country.id;
 
 -- Range [0,2)
 CREATE VIEW range1 AS
