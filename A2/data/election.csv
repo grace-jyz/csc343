@@ -1,4 +1,5 @@
 id,country_id,e_date,wikipedia,seats_total,electorate,votes_cast,votes_valid,description,previous_parliament_election_id,previous_ep_election_id,e_type
+1,1,2012-06-13,"https://bbsbsbs,100,100,100,100,,1,1,European Parliament
 18,54,2004-06-13,"http://en.wikipedia.org/wiki/European_Parliament_election,_2004_(Germany)",99,61682394,26523104,25783678,,385,417,European Parliament
 37,44,1979-06-10,"http://en.wikipedia.org/wiki/European_Parliament_election,_1979_(United_Kingdom)",81,41155166,13446091,13397858,"",243,,European Parliament
 160,43,2004-06-13,"http://en.wikipedia.org/wiki/European_Parliament_election,_2004_(France)",78,41509136,17763671,17168682,"",403,273,European Parliament
