@@ -13,6 +13,7 @@ CREATE TABLE q4(
 );
 
 -- Drop views for intermediate steps.
+DROP VIEW IF EXISTS party_pos CASCADE;
 DROP VIEW IF EXISTS pos_and_country CASCADE;
 DROP VIEW IF EXISTS range1 CASCADE;
 DROP VIEW IF EXISTS range2 CASCADE;
