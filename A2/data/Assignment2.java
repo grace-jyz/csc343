@@ -107,7 +107,7 @@ public class Assignment2 extends JDBCSubmission {
                 String comment = similarSet.getString("comment");
 
                 // Find similar politicians with inputted politician
-                if (similarity(desc + comment, politicianDesc + politicianComment) >= threshold)
+                if (similarity(desc + " " + comment, politicianDesc + " " + politicianComment) >= threshold)
                     similarPoliticians.add(similarSet.getInt("id"));
             }
 
