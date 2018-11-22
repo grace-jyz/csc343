@@ -33,7 +33,7 @@ FROM country LEFT JOIN party_pos ON party_pos.country_id = country.id;
 CREATE VIEW range1 AS
 SELECT countryName, count(party_id) r0_2
 FROM pos_and_country
-WHERE left_right >= 0 AND left_right < 2
+WHERE IS NULL OR (left_right >= 0 AND left_right < 2)
 GROUP BY countryName;
 
 -- Range [2,4)
