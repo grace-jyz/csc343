@@ -33,35 +33,35 @@ FROM country LEFT JOIN party_pos ON party_pos.country_id = country.id;
 CREATE VIEW range1 AS
 SELECT countryName, count(party_id) r0_2
 FROM pos_and_country
-WHERE IS NULL OR (left_right >= 0 AND left_right < 2)
+WHERE left_right IS NULL OR (left_right >= 0 AND left_right < 2)
 GROUP BY countryName;
 
 -- Range [2,4)
 CREATE VIEW range2 AS
 SELECT countryName, count(party_id) r2_4
 FROM pos_and_country
-WHERE left_right >= 2 AND left_right < 4
+WHERE left_right IS NULL OR (left_right >= 2 AND left_right < 4)
 GROUP BY countryName;
 
 -- Range [4,6)
 CREATE VIEW range3 AS
 SELECT countryName, count(party_id) r4_6
 FROM pos_and_country
-WHERE left_right >= 4 AND left_right < 6
+WHERE left_right IS NULL OR (left_right >= 4 AND left_right < 6)
 GROUP BY countryName;
 
 -- Range [6,8)
 CREATE VIEW range4 AS
 SELECT countryName, count(party_id) r6_8
 FROM pos_and_country
-WHERE left_right >= 6 AND left_right < 8
+WHERE left_right IS NULL OR (left_right >= 6 AND left_right < 8)
 GROUP BY countryName;
 
 -- Range [8,10]
 CREATE VIEW range5 AS
 SELECT countryName, count(party_id) r8_10
 FROM pos_and_country
-WHERE left_right >= 8 AND left_right <= 10
+WHERE left_right IS NULL OR (left_right >= 8 AND left_right <= 10)
 GROUP BY countryName;
 
 -- The answer to the query.
